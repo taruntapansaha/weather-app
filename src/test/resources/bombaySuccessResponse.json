@@ -1,0 +1,137 @@
+{
+  "cod": "200",
+  "message": 0,
+  "cnt": 3,
+  "list": [
+    {
+      "dt": 1688137200,
+      "main": {
+        "temp": 300.75,
+        "feels_like": 305.36,
+        "temp_min": 299.97,
+        "temp_max": 300.75,
+        "pressure": 1005,
+        "sea_level": 1005,
+        "grnd_level": 1006,
+        "humidity": 88,
+        "temp_kf": 0.78
+      },
+      "weather": [
+        {
+          "id": 501,
+          "main": "Rain",
+          "description": "moderate rain",
+          "icon": "10n"
+        }
+      ],
+      "clouds": {
+        "all": 100
+      },
+      "wind": {
+        "speed": 9.8,
+        "deg": 248,
+        "gust": 12.25
+      },
+      "visibility": 4913,
+      "pop": 1,
+      "rain": {
+        "3h": 6.67
+      },
+      "sys": {
+        "pod": "n"
+      },
+      "dt_txt": "2023-06-30 15:00:00"
+    },
+    {
+      "dt": 1688148000,
+      "main": {
+        "temp": 300.81,
+        "feels_like": 305.1,
+        "temp_min": 300.64,
+        "temp_max": 300.81,
+        "pressure": 1006,
+        "sea_level": 1006,
+        "grnd_level": 1006,
+        "humidity": 85,
+        "temp_kf": 0.17
+      },
+      "weather": [
+        {
+          "id": 501,
+          "main": "Rain",
+          "description": "moderate rain",
+          "icon": "10n"
+        }
+      ],
+      "clouds": {
+        "all": 100
+      },
+      "wind": {
+        "speed": 9.83,
+        "deg": 245,
+        "gust": 11.83
+      },
+      "visibility": 10000,
+      "pop": 1,
+      "rain": {
+        "3h": 6.52
+      },
+      "sys": {
+        "pod": "n"
+      },
+      "dt_txt": "2023-06-30 18:00:00"
+    },
+    {
+      "dt": 1688158800,
+      "main": {
+        "temp": 300.89,
+        "feels_like": 305.18,
+        "temp_min": 300.89,
+        "temp_max": 300.89,
+        "pressure": 1005,
+        "sea_level": 1005,
+        "grnd_level": 1004,
+        "humidity": 84,
+        "temp_kf": 0
+      },
+      "weather": [
+        {
+          "id": 501,
+          "main": "Rain",
+          "description": "moderate rain",
+          "icon": "10n"
+        }
+      ],
+      "clouds": {
+        "all": 100
+      },
+      "wind": {
+        "speed": 9.06,
+        "deg": 252,
+        "gust": 11.45
+      },
+      "visibility": 8896,
+      "pop": 1,
+      "rain": {
+        "3h": 5.19
+      },
+      "sys": {
+        "pod": "n"
+      },
+      "dt_txt": "2023-06-30 21:00:00"
+    }
+  ],
+  "city": {
+    "id": 1275339,
+    "name": "Mumbai",
+    "coord": {
+      "lat": 19.0144,
+      "lon": 72.8479
+    },
+    "country": "IN",
+    "population": 1000000,
+    "timezone": 19800,
+    "sunrise": 1688085250,
+    "sunset": 1688132992
+  }
+}
