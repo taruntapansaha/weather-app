@@ -18,5 +18,10 @@ public class AppConfiguration {
     @Value("${openWeather.api.key}")
     private String openWeatherApiKey;
 
+    @Value("${openWeather.api.connection.timeout}")
+    private int readTimeOut;
+
+    @Value("${openWeather.api.connection.timeout}")
+    private int connectionTimeOut;
 }
 

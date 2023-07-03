@@ -3,6 +3,7 @@ package com.publicissapient.weatherapp.external.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.publicissapient.weatherapp.configuration.AppConfiguration;
 import com.publicissapient.weatherapp.dto.WeatherApiResponse;
+import com.publicissapient.weatherapp.external.client.exception.BadRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +56,12 @@ class OpenWeatherMapClientTest {
                         WeatherApiResponse.class))
                 .thenReturn(ResponseEntity.ok(weatherApiResponse));
 
-        WeatherApiResponse bombay = openWeatherMapClient.getWeatherForecast("bombay", 3);
+        WeatherApiResponse bombay = null;
+        try {
+            bombay = openWeatherMapClient.getWeatherForecast("bombay", 3);
+        } catch (BadRequest e) {
+            throw new RuntimeException(e);
+        }
         assertEquals(bombay.getList().size(), 3);
     }
 

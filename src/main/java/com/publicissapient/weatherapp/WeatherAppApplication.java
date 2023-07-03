@@ -1,5 +1,7 @@
 package com.publicissapient.weatherapp;
 
+import com.publicissapient.weatherapp.configuration.AppConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -11,16 +13,17 @@ import java.time.Duration;
 @SpringBootApplication
 public class WeatherAppApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WeatherAppApplication.class, args);
-	}
+    @Autowired
+    private AppConfiguration config;
 
-	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
-		return restTemplateBuilder
-				.setConnectTimeout(Duration.ofMillis(2000))
-           		.setReadTimeout(Duration.ofMillis(2000))
-           		.build();
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(WeatherAppApplication.class, args);
+    }
 
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
+        return restTemplateBuilder.setConnectTimeout(Duration.ofMillis(config.getConnectionTimeOut()))
+                .setReadTimeout(Duration.ofMillis(config.getReadTimeOut()))
+                .build();
+    }
 }

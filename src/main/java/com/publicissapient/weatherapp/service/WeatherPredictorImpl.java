@@ -6,8 +6,10 @@ import com.publicissapient.weatherapp.dto.WeatherMapData;
 import com.publicissapient.weatherapp.external.client.WeatherClient;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.publicissapient.weatherapp.util.WeatherUtil.getLocalDateFromEpoch;
 import static com.publicissapient.weatherapp.util.WeatherUtil.getTemperatureInCelsius;
@@ -18,21 +20,37 @@ public class WeatherPredictorImpl implements WeatherPredictor {
     private final WeatherClient weatherClient;
     private final WeatherAdvisor weatherAdvisor;
 
-    public WeatherPredictorImpl(WeatherClient weatherClient, WeatherAdvisor weatherAdvisor) {
+    private final CacheService cacheService;
+
+    public WeatherPredictorImpl(WeatherClient weatherClient, WeatherAdvisor weatherAdvisor, CacheService cacheService) {
         this.weatherClient = weatherClient;
         this.weatherAdvisor = weatherAdvisor;
+        this.cacheService = cacheService;
     }
 
     @Override
-    public List<DayWeather> getWeatherRecommendation(String city, int daysCount) {
-        WeatherApiResponse weatherForecast = weatherClient.getWeatherForecast(city, daysCount);
+    public List<DayWeather> getWeatherRecommendation(String city, int daysCount) throws Exception {
+        WeatherApiResponse weatherForecast = null;
+        try {
+            weatherForecast = weatherClient.getWeatherForecast(city, daysCount);
+        } catch (Exception exception) {
+            throw exception;
+        }
+
+        if (weatherForecast == null) {
+            List<DayWeather> dayWeathers = cacheService.get(city);
+            if (dayWeathers == null || dayWeathers.isEmpty()) {
+                throw new RuntimeException("Unable to serve the request at the moment");
+            }
+            return dayWeathers;
+        }
+
 
         Map<Long, DayWeather> dayWiseWeatherData = new HashMap<>();
-        List<DayWeather> days = new LinkedList<>();
+        Map<Long, List<String>> recommendations =
+                weatherAdvisor.getRecommendations(weatherForecast.getList());
 
-        Map<Long, List<String>> recommendations = weatherAdvisor.getRecommendations(weatherForecast.getList());
-
-        for(WeatherMapData data : weatherForecast.getList()){
+        for (WeatherMapData data : weatherForecast.getList()) {
             DayWeather dayWeather = recordTemperature(data);
             Long date = data.getDt();
             dayWeather.getRecommendations().addAll(recommendations.get(date));

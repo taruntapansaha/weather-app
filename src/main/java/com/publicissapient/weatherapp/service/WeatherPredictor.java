@@ -5,5 +5,5 @@ import com.publicissapient.weatherapp.dto.DayWeather;
 import java.util.List;
 
 public interface WeatherPredictor {
-    List<DayWeather> getWeatherRecommendation(String city, int daysCount);
+    List<DayWeather> getWeatherRecommendation(String city, int daysCount) throws Exception;
 }

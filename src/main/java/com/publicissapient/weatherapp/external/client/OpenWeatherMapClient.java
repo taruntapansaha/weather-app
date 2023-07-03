@@ -2,13 +2,20 @@ package com.publicissapient.weatherapp.external.client;
 
 import com.publicissapient.weatherapp.configuration.AppConfiguration;
 import com.publicissapient.weatherapp.dto.WeatherApiResponse;
+import com.publicissapient.weatherapp.external.client.exception.BadRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Slf4j
 @Service
 public class OpenWeatherMapClient implements WeatherClient {
+    private static final String Q = "q";
+    private static final String APP_ID = "appid";
+    private static final String CNT = "cnt";
     private final RestTemplate restTemplate;
 
     private final AppConfiguration config;
@@ -19,28 +26,39 @@ public class OpenWeatherMapClient implements WeatherClient {
     }
 
     @Override
-    public WeatherApiResponse getWeatherForecast(String city, int count) {
-//        String uri = "openWeather.api.endpoint=https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={appId}&cnt={count}";
+    public WeatherApiResponse getWeatherForecast(String city, int count) throws BadRequest {
 
         String buildURL = buildURL(config.getOpenWeatherApiEndpoint(),
                 city,
                 config.getOpenWeatherApiKey(),
                 count);
 
-        ResponseEntity<WeatherApiResponse> response = restTemplate.getForEntity(buildURL, WeatherApiResponse.class);
+        ResponseEntity<WeatherApiResponse> response = null;
+
+        try {
+            response = restTemplate.getForEntity(buildURL, WeatherApiResponse.class);
+        } catch (RestClientResponseException exception) {
+
+            if (exception.getStatusCode().is4xxClientError()) {
+                log.error("Bad Request", exception);
+                throw new BadRequest("Bad Request", exception);
+            } else if (exception.getStatusCode().is5xxServerError()) {
+                // TODO: read response cached data
+                log.error(exception.getResponseBodyAsString(), exception);
+            }
+        }
+
 
         return response.getBody();
     }
 
     public static String buildURL(String url, String city, String appId, int count) {
 
-//        String uriString = "openWeather.api.endpoint=https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={appId}&cnt={count}";
-//        UriComponentsBuilder urlBuilder = UriComponentsBuilder.fromUriString(url);
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 
-        builder.replaceQueryParam("q",city)
-                .replaceQueryParam( "appid",appId)
-                .replaceQueryParam("cnt", count);
+        builder.replaceQueryParam(Q, city)
+                .replaceQueryParam(APP_ID, appId)
+                .replaceQueryParam(CNT, count);
 
         return builder.toUriString();
     }
